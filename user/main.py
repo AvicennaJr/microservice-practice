@@ -67,8 +67,8 @@ def login_for_access_token(
         email
         password
 
-    It will then first check if a user exists and if a password is valid.
-    If both are a valid, it will return a JWT token that will be valid for
+    It will first check if a user exists and if a password is valid. If
+    both are a valid, it will return a JWT token that will be valid for
     an hour. Otherwise it will return a 404 error."""
 
     user = (
