@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -125,3 +125,19 @@ def update_user(
     user.email = updated_details.email
 
     return user
+
+
+@app.delete("/users/delete ", response_model=schemas.UserResponse)
+def update_user(
+    db: Session = Depends(get_db),
+    current_user: int = Depends(oauth.get_current_user),
+):
+    """A 'delete' endpoint to delete a user.
+
+    This will permanently delete their account."""
+
+    user = db.query(models.User).filter(models.User.id == current_user.id).first()
+    user.delete(synchronize_session=False)
+    db.commit()
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
