@@ -1,26 +1,16 @@
-from fastapi import Depends, FastAPI, HTTPException, Response, status
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 import models
-import oauth
 import schemas
-from database import SessionLocal, engine, get_db
+from auth import oauth
+from db.helpers import get_db
 
-models.Base.metadata.create_all(bind=engine)
-
-app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+router = APIRouter()
 
 
-@app.post(
+@router.post(
     "/users/signup",
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.UserResponse,
@@ -56,7 +46,7 @@ def signup(user: schemas.UserSignup, db: Session = Depends(get_db)):
     return new_user
 
 
-@app.post("/users/signin", response_model=schemas.Token)
+@router.post("/users/signin", response_model=schemas.Token)
 def login_for_access_token(
     user_credentials: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
@@ -92,7 +82,7 @@ def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me", response_model=schemas.UserResponse)
+@router.get("/users/me", response_model=schemas.UserResponse)
 def read_users_me(
     db: Session = Depends(get_db), current_user: int = Depends(oauth.get_current_user)
 ):
@@ -104,7 +94,7 @@ def read_users_me(
     return user
 
 
-@app.put("/users/me", response_model=schemas.UserResponse)
+@router.put("/users/me", response_model=schemas.UserResponse)
 def update_user(
     updated_details: schemas.UserEdit,
     db: Session = Depends(get_db),
@@ -127,7 +117,7 @@ def update_user(
     return user
 
 
-@app.delete("/users/delete ", response_model=schemas.UserResponse)
+@router.delete("/users/delete ", response_model=schemas.UserResponse)
 def update_user(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth.get_current_user),
