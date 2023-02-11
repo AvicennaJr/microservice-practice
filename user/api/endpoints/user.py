@@ -7,11 +7,11 @@ import schemas
 from auth import oauth
 from db.helpers import get_db
 
-router = APIRouter()
+router = APIRouter(prefix="/users")
 
 
 @router.post(
-    "/users/signup",
+    "/signup",
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.UserResponse,
 )
@@ -46,7 +46,7 @@ def signup(user: schemas.UserSignup, db: Session = Depends(get_db)):
     return new_user
 
 
-@router.post("/users/signin", response_model=schemas.Token)
+@router.post("/signin", response_model=schemas.Token)
 def login_for_access_token(
     user_credentials: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
@@ -82,7 +82,7 @@ def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/users/me", response_model=schemas.UserResponse)
+@router.get("/me", response_model=schemas.UserResponse)
 def read_users_me(
     db: Session = Depends(get_db), current_user: int = Depends(oauth.get_current_user)
 ):
@@ -94,7 +94,7 @@ def read_users_me(
     return user
 
 
-@router.put("/users/me", response_model=schemas.UserResponse)
+@router.put("/me", response_model=schemas.UserResponse)
 def update_user(
     updated_details: schemas.UserEdit,
     db: Session = Depends(get_db),
@@ -117,7 +117,7 @@ def update_user(
     return user
 
 
-@router.delete("/users/delete ", response_model=schemas.UserResponse)
+@router.delete("/delete ", response_model=schemas.UserResponse)
 def update_user(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth.get_current_user),
