@@ -11,6 +11,7 @@ class UserSignup(BaseModel):
 
 
 class UserResponse(BaseModel):
+    id: int
     first_name: str
     last_name: str
     email: EmailStr
@@ -24,8 +25,15 @@ class UserSignin(BaseModel):
     password: str
 
 
-class UserInDB(User):
+class UserInDB(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    email: EmailStr
     password: str
+
+    class Config:
+        orm_mode = True
 
 
 class Token(BaseModel):
