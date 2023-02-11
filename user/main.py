@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException, status, Response
+from fastapi import Depends, FastAPI, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -53,7 +53,7 @@ def signup(user: schemas.UserSignup, db: Session = Depends(get_db)):
             status_code=status.HTTP_403_FORBIDDEN, detail="Email already in use"
         )
 
-    return user
+    return new_user
 
 
 @app.post("/users/signin", response_model=schemas.Token)
