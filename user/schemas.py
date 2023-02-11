@@ -25,6 +25,12 @@ class UserSignin(BaseModel):
     password: str
 
 
+class UserEdit(BaseModel):
+    first_name: str
+    last_name: str
+    email: str
+
+
 class UserInDB(BaseModel):
     id: int
     first_name: str
