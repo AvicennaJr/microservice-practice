@@ -106,7 +106,7 @@ def read_users_me(
 
 @app.put("/users/me", response_model=schemas.UserResponse)
 def update_user(
-    updated_details: schemas.UserResponse,
+    updated_details: schemas.UserEdit,
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth.get_current_user),
 ):
