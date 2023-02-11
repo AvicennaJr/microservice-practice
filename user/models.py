@@ -10,7 +10,9 @@ class User(Base):
 
     __tablename__ = "users"  # name of the table in postgres database
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(
+        Integer, primary_key=True, index=True
+    )  # primary key paramter will make the id column auto-increment
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
