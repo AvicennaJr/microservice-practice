@@ -20,3 +20,14 @@ def test_save_to_db(session):
     assert db_user.last_name == new_user.last_name
     assert db_user.email == new_user.email
     assert db_user.password == new_user.password
+
+
+def test_read_from_database(test_user, session):
+    db_user = (
+        session.query(models.User).filter(models.User.id == test_user["id"]).first()
+    )
+
+    assert db_user.id == test_user["id"]
+    assert db_user.first_name == test_user["first_name"]
+    assert db_user.last_name == test_user["last_name"]
+    assert db_user.email == test_user["email"]
