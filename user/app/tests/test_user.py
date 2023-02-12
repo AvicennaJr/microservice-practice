@@ -7,7 +7,7 @@ from app.core.config import settings
 
 def test_user_signup(client):
     resp = client.post(
-        "/users/signup/",
+        "/users/signup",
         json={
             "email": "hello@gmail.com",
             "password": "password1234",
@@ -24,7 +24,7 @@ def test_user_signup(client):
 
 def test_user_signin(client, test_user):
     resp = client.post(
-        "/users/signin/",
+        "/users/signin",
         data={
             "username": test_user["email"],  # fastapi expects username instead of email
             "password": test_user["password"],
@@ -55,7 +55,7 @@ def test_user_signin(client, test_user):
 )
 def test_incorrect_signin(client, email, password, status_code):
     resp = client.post(
-        "/users/signin/",
+        "/users/signin",
         data={"username": email, "password": password},
     )
 
@@ -63,7 +63,7 @@ def test_incorrect_signin(client, email, password, status_code):
 
 
 def test_get_user(test_user, authorized_client):
-    resp = authorized_client.get("/users/me/")
+    resp = authorized_client.get("/users/me")
     assert resp.status_code == 200
 
     user = schemas.UserResponse(**resp.json())
@@ -79,7 +79,7 @@ def test_update_user(test_user, authorized_client):
     test_user["last_name"] = "new_last_name"
     test_user["email"] = "new_email@gmail.com"
 
-    resp = authorized_client.put("/users/me/", json=test_user)
+    resp = authorized_client.put("/users/me", json=test_user)
     assert resp.status_code == 200
 
     user = schemas.UserResponse(**resp.json())
@@ -88,3 +88,8 @@ def test_update_user(test_user, authorized_client):
     assert user.first_name == test_user["first_name"]
     assert user.last_name == test_user["last_name"]
     assert user.email == test_user["email"]
+
+
+def test_delete_user(authorized_client):
+    resp = authorized_client.delete("/users/delete")
+    assert resp.status_code == 204
