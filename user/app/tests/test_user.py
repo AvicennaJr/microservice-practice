@@ -1,4 +1,8 @@
+import pytest
+from jose import jwt
+
 from app import schemas
+from app.core.config import settings
 
 
 def test_user_signup(client):
@@ -16,3 +20,20 @@ def test_user_signup(client):
     assert new_user.last_name == "Cena"
     assert new_user.email == "hello@gmail.com"
     assert resp.status_code == 201
+
+
+def test_user_signin(client, test_user):
+    resp = client.post(
+        "/users/signin/",
+        data={
+            "username": test_user["email"],  # fastapi expects username instead of email
+            "password": test_user["password"],
+        },
+    )
+    token = schemas.Token(**resp.json())
+    payload = jwt.decode(
+        token.access_token, settings.API_SECRET, algorithms=[settings.ALGORITHM]
+    )
+    assert payload.get("user_id") == test_user["id"]
+    assert token.token_type == "bearer"
+    assert resp.status_code == 200
