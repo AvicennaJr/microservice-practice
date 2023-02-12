@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from app import models
 from app.api.main import app
 from app.core.config import settings
+from app.core.security import create_access_token
 from app.db import Base, get_db
 
 DATABASE_URL = f"postgresql://{settings.DATABASE_USERNAME}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}:{settings.DATABASE_PORT}/{settings.DATABASE_NAME}_test"
@@ -57,3 +58,15 @@ def test_user(client):
     new_user = resp.json()
     new_user["password"] = user_data["password"]  # since password isn't in the response
     return new_user
+
+
+@pytest.fixture
+def token(test_user):
+    return create_access_token({"user_id": test_user["id"]})
+
+
+@pytest.fixture
+def authorized_client(client, token):
+    client.headers = {**client.headers, "Authorization": f"Bearer {token}"}
+
+    return client
