@@ -71,3 +71,4 @@ def test_get_user(test_user, authorized_client):
     assert user.id == test_user["id"]
     assert user.first_name == test_user["first_name"]
     assert user.last_name == test_user["last_name"]
+    assert user.email == test_user["email"]
