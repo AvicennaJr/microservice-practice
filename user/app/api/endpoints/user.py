@@ -46,7 +46,7 @@ def signup(user: schemas.UserSignup, db: Session = Depends(get_db)):
 
 
 @router.post("/signin", response_model=schemas.Token)
-def login_for_access_token(
+def signin(
     user_credentials: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
@@ -82,7 +82,7 @@ def login_for_access_token(
 
 
 @router.get("/me", response_model=schemas.UserResponse)
-def read_users_me(
+def get_users_me(
     db: Session = Depends(get_db),
     current_user: int = Depends(security.get_current_user),
 ):
