@@ -60,3 +60,14 @@ def test_incorrect_signin(client, email, password, status_code):
     )
 
     assert resp.status_code == status_code
+
+
+def test_get_user(test_user, authorized_client):
+    resp = authorized_client.get("/users/me/")
+    assert resp.status_code == 200
+
+    user = schemas.UserResponse(**resp.json())
+
+    assert user.id == test_user["id"]
+    assert user.first_name == test_user["first_name"]
+    assert user.last_name == test_user["last_name"]
