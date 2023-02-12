@@ -22,6 +22,21 @@ def test_user_signup(client):
     assert resp.status_code == 201
 
 
+def test_signup_with_existing_email(client, test_user):
+    resp = client.post(
+        "/users/signup",
+        json={
+            "email": "hello@gmail.com",
+            "password": "somepassword",
+            "first_name": "Someone",
+            "last_name": "Else",
+        },
+    )
+
+    assert resp.status_code == 403
+    assert resp.json().get("detail") == "Email already in use"
+
+
 def test_user_signin(client, test_user):
     resp = client.post(
         "/users/signin",
