@@ -58,7 +58,7 @@ def login_for_access_token(
 
     It will first check if a user exists and if a password is valid. If
     both are a valid, it will return a JWT token that will be valid for
-    an hour. Otherwise it will return a 404 error."""
+    an hour. Otherwise it will return a 403 forbidden error."""
 
     user = (
         db.query(models.User)
@@ -68,12 +68,12 @@ def login_for_access_token(
 
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials"
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials"
         )
 
     if not security.verify_password(user_credentials.password, user.password):
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials"
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials"
         )
 
     access_token = security.create_access_token(data={"user_id": user.id})
