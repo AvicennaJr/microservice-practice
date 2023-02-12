@@ -37,3 +37,13 @@ def test_user_signin(client, test_user):
     assert payload.get("user_id") == test_user["id"]
     assert token.token_type == "bearer"
     assert resp.status_code == 200
+
+
+def test_incorrect_signin(client, test_user):
+    resp = client.post(
+        "/users/signin/",
+        data={"username": test_user["email"], "password": "WrongPassword"},
+    )
+
+    assert resp.status_code == 403
+    assert resp.json().get("detail") == "Invalid Credentials"
