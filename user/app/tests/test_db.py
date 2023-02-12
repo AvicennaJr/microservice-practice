@@ -31,3 +31,23 @@ def test_read_from_database(test_user, session):
     assert db_user.first_name == test_user["first_name"]
     assert db_user.last_name == test_user["last_name"]
     assert db_user.email == test_user["email"]
+
+
+def test_update_database(test_user, session):
+
+    db_user = (
+        session.query(models.User).filter(models.User.id == test_user["id"]).first()
+    )
+
+    test_user["email"] = "changing@email.com"
+
+    db_user.email = test_user["email"]
+    session.add(db_user)
+    session.commit()
+    session.refresh(db_user)
+
+    edited_user = (
+        session.query(models.User).filter(models.User.id == test_user["id"]).first()
+    )
+
+    assert edited_user.email == test_user["email"]
