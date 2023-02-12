@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app import models, schemas
-from app.core import oauth
+from app.core import security
 from app.db.helpers import get_db
 
 router = APIRouter(prefix="/users")
@@ -30,7 +30,7 @@ def signup(user: schemas.UserSignup, db: Session = Depends(get_db)):
     check_user = db.query(models.User).filter(models.User.email == user.email).first()
 
     if not check_user:
-        hashed_password = oauth.get_password_hash(user.password)
+        hashed_password = security.get_password_hash(user.password)
         user.password = hashed_password
         new_user = models.User(**user.dict())  # efficiently unpack user details
         db.add(new_user)
@@ -71,19 +71,20 @@ def login_for_access_token(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials"
         )
 
-    if not oauth.verify_password(user_credentials.password, user.password):
+    if not security.verify_password(user_credentials.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials"
         )
 
-    access_token = oauth.create_access_token(data={"user_id": user.id})
+    access_token = security.create_access_token(data={"user_id": user.id})
 
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.get("/me", response_model=schemas.UserResponse)
 def read_users_me(
-    db: Session = Depends(get_db), current_user: int = Depends(oauth.get_current_user)
+    db: Session = Depends(get_db),
+    current_user: int = Depends(security.get_current_user),
 ):
     """A 'get' endpoint to provide information about a user. A user should be authenticated to
     access this endpoint."""
@@ -97,7 +98,7 @@ def read_users_me(
 def update_user(
     updated_details: schemas.UserEdit,
     db: Session = Depends(get_db),
-    current_user: int = Depends(oauth.get_current_user),
+    current_user: int = Depends(security.get_current_user),
 ):
     """A 'put' endpoint to update a user's information.
 
@@ -122,7 +123,7 @@ def update_user(
 @router.delete("/delete")
 def delete_user(
     db: Session = Depends(get_db),
-    current_user: int = Depends(oauth.get_current_user),
+    current_user: int = Depends(security.get_current_user),
 ):
     """A 'delete' endpoint to delete a user.
 
