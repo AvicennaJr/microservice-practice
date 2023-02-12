@@ -13,7 +13,8 @@ def test_user_signup(client):
             "last_name": "Cena",
         },
     )
-    # new_user = schemas.UserResponse(**resp.json())
-    print(resp.json)
-    assert resp.json().get("email") == "hello@gmail.com"
+    new_user = schemas.UserResponse(**resp.json())
+    assert new_user.first_name == "John"
+    assert new_user.last_name == "Cena"
+    assert new_user.email == "hello@gmail.com"
     assert resp.status_code == 201
