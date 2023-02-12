@@ -72,3 +72,19 @@ def test_get_user(test_user, authorized_client):
     assert user.first_name == test_user["first_name"]
     assert user.last_name == test_user["last_name"]
     assert user.email == test_user["email"]
+
+
+def test_update_user(test_user, authorized_client):
+    test_user["first_name"] = "new_first_name"
+    test_user["last_name"] = "new_last_name"
+    test_user["email"] = "new_email@gmail.com"
+
+    resp = authorized_client.put("/users/me/", json=test_user)
+    assert resp.status_code == 200
+
+    user = schemas.UserResponse(**resp.json())
+
+    assert user.id == test_user["id"]
+    assert user.first_name == test_user["first_name"]
+    assert user.last_name == test_user["last_name"]
+    assert user.email == test_user["email"]
