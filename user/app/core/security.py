@@ -20,25 +20,25 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/signin")
 
 
 def verify_password(plain_password, hashed_password):
-    """Verify password"""
+    """Verify if the user provided password is correct.
+
+    It accepts a plain password and a hashed password and will return
+    true if the plain password is correct, otherwise it will return false."""
 
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password):
+def get_password_hash(password: str):
+    """This will convert a plain password into hashed password"""
+
     return pwd_context.hash(password)
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
-    if not user:
-        return False
-    if not verify_password(password, user.password):
-        return False
-    return user
-
-
 def create_access_token(data: dict):
+    """A function to create bearer tokens.
+
+    This will allow users to access endpoints that require authentication."""
+
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=int(EXPIRY))
     to_encode.update({"exp": expire})
@@ -47,7 +47,10 @@ def create_access_token(data: dict):
 
 
 def verify_access_token(token: str, credentials_exception):
+    """A function that will verify tokens provided by users.
 
+    It will try to decode the token and return the user's id if
+    successful. Otherwise it will return a credentials exception."""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         id: str = payload.get("user_id")
@@ -60,6 +63,8 @@ def verify_access_token(token: str, credentials_exception):
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
+    """A function to get the user's id from the token."""
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

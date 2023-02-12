@@ -33,7 +33,6 @@ def test_signup_with_existing_email(client, test_user):
             "last_name": "Else",
         },
     )
-
     assert resp.status_code == 403
     assert resp.json().get("detail") == "Email already in use"
 
@@ -79,16 +78,13 @@ def test_incorrect_signin(client, email, password, status_code):
         "/users/signin",
         data={"username": email, "password": password},
     )
-
     assert resp.status_code == status_code
 
 
 def test_get_user(test_user, authorized_client):
     resp = authorized_client.get("/users/me")
     assert resp.status_code == 200
-
     user = schemas.UserResponse(**resp.json())
-
     assert user.id == test_user["id"]
     assert user.first_name == test_user["first_name"]
     assert user.last_name == test_user["last_name"]
@@ -99,12 +95,9 @@ def test_update_user(test_user, authorized_client):
     test_user["first_name"] = "new_first_name"
     test_user["last_name"] = "new_last_name"
     test_user["email"] = "new_email@gmail.com"
-
     resp = authorized_client.put("/users/me", json=test_user)
     assert resp.status_code == 200
-
     user = schemas.UserResponse(**resp.json())
-
     assert user.id == test_user["id"]
     assert user.first_name == test_user["first_name"]
     assert user.last_name == test_user["last_name"]

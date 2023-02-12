@@ -1,12 +1,14 @@
 from pydantic import BaseModel
 
 
-# Token properties to be sent when a user signs in
 class Token(BaseModel):
+    """Token properties to be sent when a user signs in"""
+
     access_token: str
     token_type: str
 
 
-# Token data to expect from the user
 class TokenData(BaseModel):
+    """Token data is the id of the user"""
+
     id: int

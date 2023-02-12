@@ -19,8 +19,8 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 @pytest.fixture
 def session():
-    Base.metadata.drop_all(bind=engine)
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.drop_all(bind=engine)  # delete existing test tables
+    Base.metadata.create_all(bind=engine)  # create a new table
 
     db = TestingSessionLocal()
     try:
@@ -47,6 +47,7 @@ def client(session):
 @pytest.fixture
 def test_user(client):
     """Responsible for creating a test user"""
+
     user_data = {
         "email": "hello@gmail.com",
         "password": "password1234",
@@ -67,6 +68,8 @@ def token(test_user):
 
 @pytest.fixture
 def authorized_client(client, token):
+    """A helper function to access endpoints that require authentication"""
+
     client.headers = {**client.headers, "Authorization": f"Bearer {token}"}
 
     return client

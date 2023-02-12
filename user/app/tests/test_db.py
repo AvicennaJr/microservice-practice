@@ -2,7 +2,6 @@ from app import models
 
 
 def test_save_to_db(session):
-
     new_user = models.User(
         email="hello@gmail.com",
         password="password1234",
@@ -12,9 +11,7 @@ def test_save_to_db(session):
     session.add(new_user)
     session.commit()
     session.refresh(new_user)
-
     db_user = session.query(models.User).filter(models.User.id == new_user.id).first()
-
     assert db_user.id == new_user.id
     assert db_user.first_name == new_user.first_name
     assert db_user.last_name == new_user.last_name
@@ -26,7 +23,6 @@ def test_read_from_database(test_user, session):
     db_user = (
         session.query(models.User).filter(models.User.id == test_user["id"]).first()
     )
-
     assert db_user.id == test_user["id"]
     assert db_user.first_name == test_user["first_name"]
     assert db_user.last_name == test_user["last_name"]
@@ -34,22 +30,18 @@ def test_read_from_database(test_user, session):
 
 
 def test_update_database(test_user, session):
-
     db_user = (
         session.query(models.User).filter(models.User.id == test_user["id"]).first()
     )
 
     test_user["email"] = "changing@email.com"
-
     db_user.email = test_user["email"]
     session.add(db_user)
     session.commit()
     session.refresh(db_user)
-
     edited_user = (
         session.query(models.User).filter(models.User.id == test_user["id"]).first()
     )
-
     assert edited_user.email == test_user["email"]
 
 
@@ -57,9 +49,7 @@ def test_delete_from_database(test_user, session):
     user = session.query(models.User).filter(models.User.id == test_user["id"])
     user.delete(synchronize_session=False)
     session.commit()
-
     db_user = (
         session.query(models.User).filter(models.User.id == test_user["id"]).first()
     )
-
     assert db_user == None

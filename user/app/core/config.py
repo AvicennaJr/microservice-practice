@@ -2,6 +2,7 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
+    """Configure environmental variables"""
 
     DATABASE_USERNAME: str
     DATABASE_PASSWORD: str
