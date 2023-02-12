@@ -1,7 +1,5 @@
 from app import schemas
 
-from .database import client, session
-
 
 def test_user_signup(client):
     resp = client.post(
