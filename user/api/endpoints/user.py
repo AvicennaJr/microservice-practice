@@ -113,12 +113,15 @@ def update_user(
     user.first_name = updated_details.first_name
     user.last_name = updated_details.last_name
     user.email = updated_details.email
+    db.add(user)
+    db.commit()
+    db.refresh(user)
 
     return user
 
 
-@router.delete("/delete ", response_model=schemas.UserResponse)
-def update_user(
+@router.delete("/delete")
+def delete_user(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth.get_current_user),
 ):
@@ -126,7 +129,7 @@ def update_user(
 
     This will permanently delete their account."""
 
-    user = db.query(models.User).filter(models.User.id == current_user.id).first()
+    user = db.query(models.User).filter(models.User.id == current_user.id)
     user.delete(synchronize_session=False)
     db.commit()
 
