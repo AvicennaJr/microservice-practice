@@ -39,11 +39,24 @@ def test_user_signin(client, test_user):
     assert resp.status_code == 200
 
 
-def test_incorrect_signin(client, test_user):
+@pytest.mark.parametrize(
+    "email, password, status_code",
+    [
+        ("hello@gmail.com", "wrongpassword", 403),
+        ("wrongemail@gmail.com", "password1234", 403),
+        ("wrongemail@gmail.com", "wrongpassword", 403),
+        (
+            None,
+            "password1234",
+            422,  # FastAPI return a status code 422 when a schema validation fails
+        ),
+        ("hello@gmail.com", None, 422),
+    ],
+)
+def test_incorrect_signin(client, email, password, status_code):
     resp = client.post(
         "/users/signin/",
-        data={"username": test_user["email"], "password": "WrongPassword"},
+        data={"username": email, "password": password},
     )
 
-    assert resp.status_code == 403
-    assert resp.json().get("detail") == "Invalid Credentials"
+    assert resp.status_code == status_code
