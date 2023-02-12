@@ -51,3 +51,15 @@ def test_update_database(test_user, session):
     )
 
     assert edited_user.email == test_user["email"]
+
+
+def test_delete_from_database(test_user, session):
+    user = session.query(models.User).filter(models.User.id == test_user["id"])
+    user.delete(synchronize_session=False)
+    session.commit()
+
+    db_user = (
+        session.query(models.User).filter(models.User.id == test_user["id"]).first()
+    )
+
+    assert db_user == None
