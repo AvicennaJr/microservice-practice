@@ -1,8 +1,9 @@
 import pytest
 from jose import jwt
 
-from app import schemas
+from app import models, schemas
 from app.core.config import settings
+from app.core.security import verify_password
 
 
 def test_user_signup(client):
@@ -35,6 +36,11 @@ def test_signup_with_existing_email(client, test_user):
 
     assert resp.status_code == 403
     assert resp.json().get("detail") == "Email already in use"
+
+
+def test_hashed_password(session, test_user):
+    user = session.query(models.User).filter(models.User.id == test_user["id"]).first()
+    assert verify_password(test_user["password"], user.password)
 
 
 def test_user_signin(client, test_user):
