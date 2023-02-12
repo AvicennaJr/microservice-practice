@@ -41,3 +41,19 @@ def client(session):
 
     app.dependency_overrides[get_db] = override_get_db
     yield TestClient(app)
+
+
+@pytest.fixture
+def test_user(client):
+    """Responsible for creating a test user"""
+    user_data = {
+        "email": "hello@gmail.com",
+        "password": "password1234",
+        "first_name": "John",
+        "last_name": "Cena",
+    }
+    resp = client.post("/users/signup/", json=user_data)
+    assert resp.status_code == 201
+    new_user = resp.json()
+    new_user["password"] = user_data["password"]  # since password isn't in the response
+    return new_user
