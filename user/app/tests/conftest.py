@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.core.security import create_access_token
 from app.db import Base, get_db
 
-DATABASE_URL = f"postgresql://{settings.DATABASE_USERNAME}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}:{settings.DATABASE_PORT}/{settings.DATABASE_NAME}_test"
+DATABASE_URL = f"postgresql://{settings.TEST_DATABASE_USERNAME}:{settings.TEST_DATABASE_PASSWORD}@{settings.TEST_DATABASE_HOST}:{settings.TEST_DATABASE_PORT}/{settings.TEST_DATABASE_NAME}"
 
 engine = create_engine(DATABASE_URL)
 
