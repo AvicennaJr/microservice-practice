@@ -85,11 +85,17 @@ def signin(
 def get_users_me(
     db: Session = Depends(get_db),
     current_user: int = Depends(security.get_current_user),
-):
+) -> None:
     """A 'get' endpoint to provide information about a user. A user should be authenticated to
     access this endpoint."""
 
     user = db.query(models.User).filter(models.User.id == current_user.id).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+        )
 
     return user
 
