@@ -100,6 +100,23 @@ def test_get_deleted_user_with_valid_token(session, authorized_client, test_user
     assert resp.json().get("detail") == "Could not validate credentials"
 
 
+def test_update_deleted_user_with_valid_token(session, authorized_client, test_user):
+    user = session.query(models.User).filter(models.User.id == test_user["id"])
+    user.delete(synchronize_session=False)
+    session.commit()
+    resp = authorized_client.put(
+        "/users/me",
+        json={
+            "email": "hello@gmail.com",
+            "password": "somepassword",
+            "first_name": "Someone",
+            "last_name": "Else",
+        },
+    )
+    assert resp.status_code == 401
+    assert resp.json().get("detail") == "Could not validate credentials"
+
+
 def test_update_user(test_user, authorized_client):
     test_user["first_name"] = "new_first_name"
     test_user["last_name"] = "new_last_name"
