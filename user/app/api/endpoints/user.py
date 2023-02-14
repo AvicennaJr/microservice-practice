@@ -116,6 +116,11 @@ def update_user(
     The user has to be authenticated and they can update any of the fields above."""
 
     user = db.query(models.User).filter(models.User.id == current_user.id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+        )
     user.first_name = updated_details.first_name
     user.last_name = updated_details.last_name
     user.email = updated_details.email
