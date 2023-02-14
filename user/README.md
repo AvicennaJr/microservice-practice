@@ -35,6 +35,9 @@ pip install -r requirements.txt
         ```
         - `ALGORITHM`: Algorithm used to sign the JWT token. The default is `HS256`.
         - `TOKEN_EXPIRY`: Number of minutes a token will be valid. The default is 60 minutes.
+    - Docker variables:
+        - `HOST_DATABASE_PORT`: Port where the host machine will connect to the database image.
+        - `HOST_APPLICATION_PORT`: Port where the host machine will run the application.
 ## Running the app
 You can run the app and test the endpoints with:
 ```
