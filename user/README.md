@@ -43,6 +43,16 @@ You can run the app and test the endpoints with:
 ```
 uvicorn app.api.main:app --reload
 ```
+## Running the app with Docker
+You can build a docker image with:
+```
+docker compose build
+```
+And run it with:
+```
+docker compose up
+```
+*Note: Make sure to fill in the required environmental variables.*
 ## API Documentation
 You can find the API docs at http://127.0.0.1:8000/docs
 ## Running tests
