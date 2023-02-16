@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     TOKEN_EXPIRY: int = "60"
 
+    # rabbitmq variables
+    RABBITMQ_URL: str
+    HEARTBEAT: str = 300
+    CONNECTION_ATTEMPTS: str = 10
+    RETRY_DELAY: str = 60
+
     class Config:
         env_file = ".env"
 
