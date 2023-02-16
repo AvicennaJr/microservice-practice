@@ -8,6 +8,7 @@ class UserSignup(BaseModel):
 
     first_name: str
     last_name: str
+    identification: str
     email: EmailStr
     password: str
 
@@ -18,6 +19,7 @@ class UserResponse(BaseModel):
     id: int
     first_name: str
     last_name: str
+    identification: str
     email: EmailStr
 
     class Config:
@@ -46,6 +48,7 @@ class UserInDB(BaseModel):
     id: int
     first_name: str
     last_name: str
+    identification: str
     email: EmailStr
     password: str
 
