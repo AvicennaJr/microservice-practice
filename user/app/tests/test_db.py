@@ -5,6 +5,7 @@ def test_save_to_db(session):
     new_user = models.User(
         email="hello@gmail.com",
         password="password1234",
+        identification="123456789",
         first_name="John",
         last_name="Cena",
     )
@@ -26,6 +27,7 @@ def test_read_from_database(test_user, session):
     assert db_user.id == test_user["id"]
     assert db_user.first_name == test_user["first_name"]
     assert db_user.last_name == test_user["last_name"]
+    assert db_user.identification == test_user["identification"]
     assert db_user.email == test_user["email"]
 
 

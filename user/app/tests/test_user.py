@@ -14,6 +14,7 @@ def test_user_signup(client):
             "password": "password1234",
             "first_name": "John",
             "last_name": "Cena",
+            "identification": "123456789",
         },
     )
     new_user = schemas.UserResponse(**resp.json())
@@ -31,6 +32,7 @@ def test_signup_with_existing_email(client, test_user):
             "password": "somepassword",
             "first_name": "Someone",
             "last_name": "Else",
+            "identification": "123456789",
         },
     )
     assert resp.status_code == 403

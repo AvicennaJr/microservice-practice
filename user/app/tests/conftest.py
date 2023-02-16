@@ -51,6 +51,7 @@ def test_user(client):
     user_data = {
         "email": "hello@gmail.com",
         "password": "password1234",
+        "identification": "123456789",
         "first_name": "John",
         "last_name": "Cena",
     }
