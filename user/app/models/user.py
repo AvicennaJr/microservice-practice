@@ -15,6 +15,7 @@ class User(Base):
     )  # primary key paramter will make the id column auto-increment
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
+    identification = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     created_at = Column(
