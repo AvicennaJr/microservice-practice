@@ -1,3 +1,5 @@
+import json
+
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -5,6 +7,7 @@ from sqlalchemy.orm import Session
 from app import models, schemas
 from app.core import security
 from app.db.helpers import get_db
+from app.queues import publish
 
 router = APIRouter(prefix="/users")
 
@@ -36,6 +39,7 @@ def signup(user: schemas.UserSignup, db: Session = Depends(get_db)):
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
+        publish("user_created", user.json())
 
     else:
         raise HTTPException(
@@ -88,6 +92,8 @@ def get_users_me(
 ) -> None:
     """A 'get' endpoint to provide information about a user. A user should be authenticated to
     access this endpoint."""
+
+    publish("user_created", json.dumps({"hi": "hello"}))
 
     user = db.query(models.User).filter(models.User.id == current_user.id).first()
 
