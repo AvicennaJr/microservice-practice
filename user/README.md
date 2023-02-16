@@ -9,8 +9,14 @@ Then enter the `user` folder with:
 ```
 cd savings-scheme/user/
 ```
-### Install requirements
-Install the dependencies with:
+### Requirements
+- Python 3.9
+- PostgreSQL v13+
+- Docker v23.0.1+
+- Docker Compose v2.16.0+
+
+### Dependencies
+Install the python dependencies with:
 ```
 pip install -r requirements.txt
 ```
@@ -36,8 +42,9 @@ pip install -r requirements.txt
         - `ALGORITHM`: Algorithm used to sign the JWT token. The default is `HS256`.
         - `TOKEN_EXPIRY`: Number of minutes a token will be valid. The default is 60 minutes.
     - Docker variables:
-        - `HOST_DATABASE_PORT`: Port where the host machine will connect to the database image.
-        - `HOST_APPLICATION_PORT`: Port where the host machine will run the application.
+        - `APPLICATION_PORT`: Port where the host machine will run the application.
+        - `DATABASE_DEVELOPMENT_PORT`: Port where the host machine will connect to the database container.
+        - `DATABASE_TESTING_PORT`: Port where host machine will connect to the test database container.
     - RabbitMQ variables:
         - `RABBITMQ_URL`: The RabbitMQ url connect to in the format:
         ```
@@ -48,24 +55,36 @@ pip install -r requirements.txt
         - `CONNECTION_ATTEMPTS`: The number of connection attempts after a failed connection. The default is 10 attempts.
         - `RETRY_DELAY`: The number of seconds to wait before attempting to reconnect a failed connection. The default wait time is 60 seconds.
 ## Running the app
-You can run the app and test the endpoints with:
+### Locally
+- Fill in the environmental variables according
+- Run the app with:
 ```
 uvicorn app.api.main:app --reload
 ```
-## Running the app with Docker
-You can build a docker image with:
+### With Docker
+- Fill in the environmental variables
+- Build the containers with:
 ```
 docker compose build
 ```
-And run it with:
+- Run the application with:
 ```
 docker compose up
 ```
-*Note: Make sure to fill in the required environmental variables.*
 ## API Documentation
 You can find the API docs at http://127.0.0.1:8000/docs
 ## Running tests
-You can run tests with:
+### Locally
+- You can run tests locally with:
+```
+pytest -v
+```
+### With Docker
+- Access the containers shell with:
+```
+docker compose exec backend sh
+```
+- Run tests with:
 ```
 pytest -v
 ```
