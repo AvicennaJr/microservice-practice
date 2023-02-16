@@ -23,6 +23,7 @@ def signup(user: schemas.UserSignup, db: Session = Depends(get_db)):
     FastAPI will ensure the new user submits the following information (as defined in schemas.UserSignup):
         firstname
         lastname
+        identification
         email
         password
 
@@ -39,7 +40,9 @@ def signup(user: schemas.UserSignup, db: Session = Depends(get_db)):
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
-        publish("user_created", user.json())
+        publish_user = user.dict()
+        publish_user["id"] = new_user.__dict__["id"]
+        publish("user_created", json.dumps(publish_user))
 
     else:
         raise HTTPException(
@@ -93,8 +96,6 @@ def get_users_me(
     """A 'get' endpoint to provide information about a user. A user should be authenticated to
     access this endpoint."""
 
-    publish("user_created", json.dumps({"hi": "hello"}))
-
     user = db.query(models.User).filter(models.User.id == current_user.id).first()
 
     if not user:
@@ -133,6 +134,9 @@ def update_user(
     db.add(user)
     db.commit()
     db.refresh(user)
+    publish_user = updated_details.dict()
+    publish_user["id"] = current_user.id
+    publish("user_updated", json.dumps(publish_user))
 
     return user
 
@@ -149,5 +153,7 @@ def delete_user(
     user = db.query(models.User).filter(models.User.id == current_user.id)
     user.delete(synchronize_session=False)
     db.commit()
+    publish_user = {"id": current_user.id}
+    publish("user_deleted", json.dumps(publish_user))
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
