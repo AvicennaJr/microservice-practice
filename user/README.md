@@ -38,6 +38,15 @@ pip install -r requirements.txt
     - Docker variables:
         - `HOST_DATABASE_PORT`: Port where the host machine will connect to the database image.
         - `HOST_APPLICATION_PORT`: Port where the host machine will run the application.
+    - RabbitMQ variables:
+        - `RABBITMQ_URL`: The RabbitMQ url connect to in the format:
+        ```
+        scheme://username:password@host:port/virtual_host
+        ```
+        The scheme can be `amqp` for non SSL connections and `amqps` for SSL connections.
+        - `HEARTBEAT`: Pass a value greater than zero to enable heartbeats between the server and the application. The integer passed will be the number of seconds between heartbeats. The default is 300 seconds.
+        - `CONNECTION_ATTEMPTS`: The number of connection attempts after a failed connection. The default is 10 attempts.
+        - `RETRY_DELAY`: The number of seconds to wait before attempting to reconnect a failed connection. The default wait time is 60 seconds.
 ## Running the app
 You can run the app and test the endpoints with:
 ```
