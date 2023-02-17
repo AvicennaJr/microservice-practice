@@ -22,16 +22,16 @@ services:
       POSTGRES_PASSWORD: ${TEST_DATABASE_PASSWORD}
     ports:
       - ${DATABASE_TESTING_PORT}:${TEST_DATABASE_PORT}
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: 'uvicorn app.api.main:app --reload --host 0.0.0.0'
-    ports:
-      - ${APPLICATION_PORT}:8001
-    volumes:
-      - .:/app
-    depends_on:
-      - db
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   command: 'uvicorn app.api.main:app --reload --host 0.0.0.0'
+  #   ports:
+  #     - ${APPLICATION_PORT}:8001
+  #   volumes:
+  #     - .:/app
+  #   depends_on:
+  #     - db
   
   
